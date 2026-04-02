@@ -6,8 +6,11 @@ api_key = st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=api_key)
 
 # Page config
-st.set_page_config(page_title="Do Your Thing", page_icon="🤖", layout="centered")
-
+st.set_page_config(
+    page_title="Do Your Thing",
+    page_icon="logo.png",
+    layout="centered"
+)
 # 🌗 Theme toggle
 theme = st.sidebar.selectbox("🌗 Theme", ["Dark", "Light"])
 

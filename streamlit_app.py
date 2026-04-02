@@ -1,8 +1,8 @@
 import streamlit as st
 import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyClaj3aY-GnFVj_k4XC1_gjpMgCgNqw5II")
-
+api_key = st.secrets["GEMINI_API_KEY"]
+genai.configure(api_key=api_key)
 st.set_page_config(page_title="Do Your Thing", page_icon="🤖", layout="centered")
 
 theme = st.sidebar.selectbox("🌗 Theme", ["Light", "Dark"])

@@ -8,7 +8,7 @@ genai.configure(api_key=api_key)
 # Page config
 st.set_page_config(
     page_title="Do Your Thing",
-    page_icon="logo.png",
+    page_icon="DYT.png",
     layout="centered"
 )
 # 🌗 Theme toggle

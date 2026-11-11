@@ -1,203 +1,109 @@
+from pathlib import Path
 import streamlit as st
 import google.generativeai as genai
 
-# 🔑 API Key
-api_key = st.secrets["GEMINI_API_KEY"]
-genai.configure(api_key=api_key)
-
-# Page config
-st.set_page_config(
-    page_title="Do Your Thing",
-    page_icon="DYT.png",
-    layout="centered"
-)
-# 🌗 Theme toggle
-theme = st.sidebar.selectbox("🌗 Theme", ["Dark", "Light"])
-
-# 🎨 Modern UI CSS
-if theme == "Dark":
-    st.markdown("""
-    <style>
-    .stApp {
-        background-color: #0f172a;
-        color: #f1f5f9;
-    }
-
-    .block-container {
-        max-width: 700px;
-        margin: auto;
-    }
-
-    .stTextInput > div > div > input {
-        background-color: #1e293b;
-        color: white;
-        border-radius: 10px;
-        padding: 12px;
-        border: 1px solid #334155;
-    }
-
-    .stButton button {
-        background-color: #3b82f6;
-        color: white;
-        border-radius: 10px;
-        padding: 10px 16px;
-        font-weight: bold;
-        border: none;
-    }
-
-    .stButton button:hover {
-        background-color: #2563eb;
-    }
-
-    .chat-user {
-        background-color: #2563eb;
-        padding: 10px;
-        border-radius: 10px;
-        margin: 6px 0;
-        color: white;
-    }
-
-    .chat-bot {
-        background-color: #334155;
-        padding: 10px;
-        border-radius: 10px;
-        margin: 6px 0;
-        color: white;
-    }
-
-    @media (max-width: 768px) {
-        .block-container {
-            padding: 10px !important;
-        }
-
-        h1 {
-            font-size: 24px !important;
-        }
-
-        .stButton button {
-            width: 100%;
-            margin-top: 5px;
-        }
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-else:
-    st.markdown("""
-    <style>
-    .stApp {
-        background-color: #f8fafc;
-        color: #0f172a;
-    }
-
-    .block-container {
-        max-width: 700px;
-        margin: auto;
-    }
-
-    .stTextInput > div > div > input {
-        background-color: white;
-        color: black;
-        border-radius: 10px;
-        padding: 12px;
-        border: 1px solid #cbd5e1;
-    }
-
-    .stButton button {
-        background-color: #3b82f6;
-        color: white;
-        border-radius: 10px;
-        padding: 10px 16px;
-        font-weight: bold;
-        border: none;
-    }
-
-    .chat-user {
-        background-color: #3b82f6;
-        padding: 10px;
-        border-radius: 10px;
-        margin: 6px 0;
-        color: white;
-    }
-
-    .chat-bot {
-        background-color: #e2e8f0;
-        padding: 10px;
-        border-radius: 10px;
-        margin: 6px 0;
-        color: black;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# 🎨 Header
-st.image("logo.png", width=80)
+st.set_page_config(page_title="Do Your Thing | AI Assistant", page_icon="🤖", layout="centered", initial_sidebar_state="collapsed")
+ROOT = Path(__file__).resolve().parent
+LOGO_PATH = ROOT / "logo.png"
 
 st.markdown("""
-<div style='text-align: center;'>
-    <h1>🤖 Do Your Thing</h1>
-    <h4>Your Personal AI Assistant</h4>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
+.stApp { background: var(--background-color); color: var(--text-color); font-family: 'DM Sans', sans-serif; }
+.block-container { max-width: 860px; padding-top: 2.2rem; padding-bottom: 3rem; }
+h1,h2,h3 { font-family: 'Space Grotesk',sans-serif !important; letter-spacing: -.035em; }
+.hero { text-align:center; padding:1.1rem 0 1.5rem; }
+.hero-kicker { display:inline-block; padding:.35rem .75rem; border:1px solid var(--border-color); border-radius:999px; font-size:.78rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; opacity:.78; }
+.hero h1 { font-size:clamp(2.2rem,6vw,3.5rem); line-height:1.08; margin:.85rem 0 .45rem; }
+.hero p { opacity:.72; font-size:1.05rem; margin:0; }
+.info-card { background:var(--secondary-background-color); border:1px solid var(--border-color); border-radius:18px; padding:1.1rem 1.25rem; margin:.5rem 0 1rem; }
+[data-testid="stChatMessage"] { border:1px solid var(--border-color); border-radius:16px; padding:.9rem 1rem; margin-bottom:.75rem; }
+[data-testid="stChatInput"] { border-radius:16px; }
+[data-testid="stButton"] button { border-radius:12px; min-height:2.7rem; font-weight:650; transition:transform .15s ease; }
+[data-testid="stButton"] button:hover { transform:translateY(-1px); }
+a { color:var(--primary-color) !important; }
+.footer { text-align:center; opacity:.72; font-size:.88rem; padding-top:1.5rem; }
+@media(max-width:640px) { .block-container { padding:1.2rem 1rem 2rem; } .hero { padding-top:.5rem; } }
+</style>
+""", unsafe_allow_html=True)
+
+_, center, _ = st.columns([1, 2, 1])
+with center:
+    if LOGO_PATH.exists():
+        st.image(str(LOGO_PATH), width=104)
+
+st.markdown("""
+<div class="hero">
+  <span class="hero-kicker">Your space to think</span>
+  <h1>Do Your Thing</h1>
+  <p>A simple, friendly AI assistant powered by Gemini.</p>
 </div>
 """, unsafe_allow_html=True)
 
-# 🤖 Auto-select model
-models = genai.list_models()
-MODEL_NAME = None
+chat_tab, about_tab = st.tabs(["💬  Chat", "👋  About"])
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+if "gemini_chat" not in st.session_state:
+    st.session_state.gemini_chat = None
 
-for m in models:
-    if "generateContent" in m.supported_generation_methods:
-        MODEL_NAME = m.name
-        break
+def get_model():
+    """Configure Gemini and choose an available text-generation model."""
+    api_key = st.secrets.get("GEMINI_API_KEY")
+    if not api_key:
+        raise RuntimeError("GEMINI_API_KEY is missing. Add it to Streamlit secrets.")
+    genai.configure(api_key=api_key)
+    available = [
+        item.name for item in genai.list_models()
+        if "generateContent" in getattr(item, "supported_generation_methods", [])
+    ]
+    if not available:
+        raise RuntimeError("No Gemini model with generateContent access was found.")
+    selected = next((name for name in available if "flash" in name.lower()), available[0])
+    return genai.GenerativeModel(selected)
 
-model = genai.GenerativeModel(MODEL_NAME)
+with chat_tab:
+    st.markdown('<div class="info-card">Ask a question, explore an idea, or start a conversation. Your chat stays in this session.</div>', unsafe_allow_html=True)
+    if st.button("🗑️ Clear conversation"):
+        st.session_state.messages = []
+        st.session_state.gemini_chat = None
+        st.rerun()
 
-# 💬 Chat memory
-if "chat" not in st.session_state:
-    st.session_state.chat = model.start_chat(history=[])
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-if "history" not in st.session_state:
-    st.session_state.history = []
+    prompt = st.chat_input("Message Do Your Thing…")
+    if prompt:
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
+        with st.chat_message("assistant"):
+            with st.spinner("Thinking…"):
+                try:
+                    if st.session_state.gemini_chat is None:
+                        st.session_state.gemini_chat = get_model().start_chat(history=[])
+                    response = st.session_state.gemini_chat.send_message(prompt)
+                    answer = response.text or "I couldn't generate a text response. Please try again."
+                    st.markdown(answer)
+                    st.session_state.messages.append({"role": "assistant", "content": answer})
+                except Exception as exc:
+                    st.error(f"Sorry, I couldn't reach Gemini. {exc}")
+                    st.caption("Check GEMINI_API_KEY in Streamlit secrets and confirm the key has access to a Gemini model.")
 
-# 💬 Input
-user_input = st.text_input("💬 Type your message:")
+with about_tab:
+    st.subheader("About this project")
+    st.write("Do Your Thing is a lightweight conversational AI assistant built with Python and Streamlit. It uses Google's Gemini API to generate helpful responses in a clean, session-based chat experience.")
+    st.markdown("#### What it offers")
+    st.markdown("- Natural-language conversations powered by Gemini\n- Chat history maintained during the current app session\n- One-click conversation reset\n- Responsive layout that follows Streamlit's light or dark theme")
+    st.markdown("#### Built with")
+    st.write("Python  ·  Streamlit  ·  Google Gemini API")
+    st.divider()
+    st.markdown("#### Meet the developer")
+    st.write("Built by **Diwakar Jha** — an MCA (AI/ML) student interested in building practical AI-powered applications.")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.link_button("LinkedIn ↗", "https://www.linkedin.com/in/diwakar-jha-064130229/", use_container_width=True)
+    with col2:
+        st.link_button("GitHub ↗", "https://github.com/Stfu-diwakar", use_container_width=True)
 
-col1, col2 = st.columns(2)
-send = col1.button("🚀 Send")
-clear = col2.button("❌ Clear")
-
-# 🚀 Send
-if send and user_input:
-    response = st.session_state.chat.send_message(user_input)
-
-    st.session_state.history.append(("You", user_input))
-    st.session_state.history.append(("Bot", response.text))
-
-# ❌ Clear
-if clear:
-    st.session_state.history = []
-    st.session_state.chat = model.start_chat(history=[])
-
-# 💬 Chat display (BUBBLES)
-for role, msg in st.session_state.history:
-    if role == "You":
-        st.markdown(f"<div class='chat-user'>🧑 {msg}</div>", unsafe_allow_html=True)
-    else:
-        st.markdown(f"<div class='chat-bot'>🤖 {msg}</div>", unsafe_allow_html=True)
-
-# ❤️ Footer
-st.markdown("""
-<hr>
-<div style='text-align: center;'>
-
-<p style="font-size:18px;">Made with ❤️ by <b>DWKR</b></p>
-
-<a href="https://www.linkedin.com/in/diwakar-jha-064130229/" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="35" style="margin:10px;">
-</a>
-
-<a href="https://github.com/Stfu-diwakar" target="_blank">
-    <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" width="35" style="margin:10px;">
-</a>
-
-</div>
-""", unsafe_allow_html=True)
+st.markdown('<div class="footer">Made with care by <strong>DWKR</strong> · Do Your Thing</div>', unsafe_allow_html=True)

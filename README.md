@@ -1,111 +1,107 @@
-# 🤖 DYT Chatbot
+# Do Your Thing — Gemini AI Chatbot
 
-A simple and interactive chatbot application built with **Streamlit**. This project demonstrates how to create and deploy a conversational AI interface using Python and Streamlit.
+A clean, responsive conversational AI assistant built with **Python**, **Streamlit**, and Google's **Gemini API**.
 
----
+## Live demo
 
-## 🚀 Live Demo
+https://chatbot-dyt.streamlit.app/
 
-👉 https://chatbot-dyt.streamlit.app/
+## Features
 
----
+- Conversational AI responses powered by Gemini
+- Chat-style interface with conversation history during the current session
+- One-click conversation reset
+- Responsive desktop and mobile layout
+- Theme-aware styling that follows Streamlit's light or dark appearance
+- Dedicated About section with developer profile links
+- API credentials loaded through Streamlit secrets
 
-## 📌 Features
+## Tech stack
 
-* 💬 Interactive chatbot interface
-* ⚡ Fast and lightweight Streamlit app
-* 🧠 AI-powered responses
-* 🌐 Deployed and accessible online
+| Technology | Purpose |
+|---|---|
+| Python | Application logic |
+| Streamlit | User interface |
+| Google Generative AI SDK | Gemini API integration |
 
----
+## Project structure
 
-## 🛠️ Tech Stack
-
-* **Python**
-* **Streamlit**
-* (Optional) OpenAI / NLP backend
-
----
-
-## 📂 Project Structure
-
-```
+```text
 .
-├── DYT.png               # App screenshot / asset
-├── logo.png             # Logo file
-├── README.md            # Project documentation
-├── requirements.txt     # Dependencies
-└── streamlit_app.py     # Main application file
+├── DYT.png
+├── logo.png
+├── README.md
+├── requirements.txt
+└── streamlit_app.py
 ```
 
----
+## Run locally
 
-## ⚙️ Installation & Setup
+1. Clone the repository:
 
-### 1. Clone the repository
+   ```bash
+   git clone https://github.com/Stfu-diwakar/ChatBot.git
+   cd ChatBot
+   ```
 
-```bash
-git clone <your-repo-url>
-cd <your-repo-folder>
-```
+2. Create and activate a virtual environment:
 
-### 2. Create a virtual environment (optional but recommended)
+   **Windows**
+   ```bash
+   python -m venv .venv
+   .venv\\Scripts\\activate
+   ```
 
-```bash
-python -m venv venv
-source venv/bin/activate   # Mac/Linux
-venv\Scripts\activate      # Windows
-```
+   **macOS / Linux**
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   ```
 
-### 3. Install dependencies
+3. Install dependencies:
 
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-### 4. Run the app locally
+4. Create `.streamlit/secrets.toml` and add your Gemini key:
 
-```bash
-streamlit run streamlit_app.py
-```
+   ```toml
+   GEMINI_API_KEY = "your-gemini-api-key"
+   ```
 
----
+   Keep this file private. Never commit API keys to GitHub.
 
-## 🌍 Deployment
+5. Run the app:
 
-This app is deployed using **Streamlit Cloud**.
+   ```bash
+   streamlit run streamlit_app.py
+   ```
 
-To deploy your own:
+## Deploy on Streamlit Community Cloud
 
-1. Push your project to GitHub
-2. Go to https://streamlit.io/cloud
-3. Connect your repo
-4. Select `streamlit_app.py`
-5. Deploy 🚀
+1. Connect this GitHub repository.
+2. Set the main file path to `streamlit_app.py`.
+3. Under **Settings → Secrets**, add:
 
----
+   ```toml
+   GEMINI_API_KEY = "your-gemini-api-key"
+   ```
 
-## 📸 Screenshots
+4. Save and redeploy.
 
-(Add your `DYT.png` here if you want to showcase the UI)
+## About the developer
 
----
+**Diwakar Jha** — MCA (AI/ML) student and AI application developer.
 
-## 🤝 Contributing
+- [LinkedIn](https://www.linkedin.com/in/diwakar-jha-064130229/)
+- [GitHub](https://github.com/Stfu-diwakar)
 
-Contributions are welcome! Feel free to fork the repo and submit a pull request.
+## Notes
 
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-## 🙌 Acknowledgements
-
-* Streamlit for the amazing framework
-* Open-source community ❤️
+- The Gemini API key is loaded through Streamlit secrets and is not hard-coded.
+- Chat history is stored in session state, not in a permanent database.
+- Available models depend on the Gemini account, SDK version, and API access.
 
 ---
+Made with care by **DWKR**.

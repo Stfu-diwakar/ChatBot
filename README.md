@@ -4,7 +4,7 @@ A clean, responsive conversational AI assistant built with **Python**, **Streaml
 
 ## Live demo
 
-https://chatbot-dyt.streamlit.app/
+https://chatbot-dwkr.streamlit.app/
 
 ## Features
 
